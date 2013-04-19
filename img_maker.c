@@ -180,12 +180,12 @@ void usage(const char *appname) {
 	p = p ? p + 1 : appname;
 
 	printf("USAGE:\n"
-			"\t%s [chiptype] [loader] [major version] [minor version] [subversion] [old image] [out image]\n"
+			"%s [chiptype] [loader] [major ver] [minor ver] [subver] [old image] [out image]\n\n"
 			"Example:\n"
-			"\t%s -rk30 Loader.bin 1 0 23 rawimage.img rkimage.img \tRK30 board\n"
-			"\n\n\n",
-			"Options:\n",
-			"[chiptype]:\n\trk29\n\trk30\n\trk31",p, p, p);
+			"%s -rk30 Loader.bin 1 0 23 rawimage.img rkimage.img \tRK30 board\n"
+			"\n\n"
+			"Options:\n"
+			"[chiptype]:\n\trk29\n\trk30\n\trk31",p,p);
 }
 
 int main(int argc, char **argv)
@@ -210,8 +210,6 @@ int main(int argc, char **argv)
 			usage(argv[0]);
 			return 0;
 		}
-		// chiptype, loader, majorver, minorver, subver, oldimage, newimage
-		pack_rom(argv[2], atoi(argv[3]), atoi(argv[4]), atoi(argv[5]), argv[6], argv[7]);
 	}
 	else
 	{
