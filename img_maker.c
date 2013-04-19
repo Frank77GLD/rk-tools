@@ -4,11 +4,9 @@
 #include <limits.h>
 #include <stdlib.h>
 #include <time.h>
-#include "rkrom_29xx.h"
+#include "rkrom.h"
 #include "rkafp.h"
 #include "md5.h"
-
-unsigned int chiptype = 0x50;
 
 unsigned int import_data(const char* infile, void *head, size_t head_len, FILE *fp)
 {
@@ -77,13 +75,13 @@ void append_md5sum(FILE *fp)
 	}
 }
 
-int pack_rom(const char *loader_filename, int majver, int minver, int subver, const char *image_filename, const char *outfile)
+int pack_rom(unsigned int chiptype, const char *loader_filename, int majver, int minver, int subver, const char *image_filename, const char *outfile)
 {
 	time_t nowtime;
 	struct tm local_time;
 	int i;
 
-	struct _rkfw_header rom_header = {
+	struct rkfw_header rom_header = {
 		.head_code = "RKFW",
 		.head_len = 0x66,
 		.loader_offset = 0x66
@@ -182,10 +180,12 @@ void usage(const char *appname) {
 	p = p ? p + 1 : appname;
 
 	printf("USAGE:\n"
-			"\t%s [-rk30|-rk29] [loader] [major version] [minor version] [subversion] [old image] [out image]\n"
+			"\t%s [chiptype] [loader] [major version] [minor version] [subversion] [old image] [out image]\n"
 			"Example:\n"
 			"\t%s -rk30 Loader.bin 1 0 23 rawimage.img rkimage.img \tRK30 board\n"
-			"\t%s -rk29 Loader.bin 5 2 1 rawimage.img rkimage.img  \tRK29 board\n", p, p, p);
+			"\n\n\n",
+			"Options:\n",
+			"[chiptype]:\n\trk29\n\trk30\n\trk31",p, p, p);
 }
 
 int main(int argc, char **argv)
@@ -193,20 +193,24 @@ int main(int argc, char **argv)
 	// loader, majorver, minorver, subver, oldimage, newimage
 	if (argc == 8)
 	{
-		if (strcmp(argv[1], "-rk30") == 0)
+		if (strcmp(argv[1], "rk29") == 0)
 		{
-			chiptype = 0x60;
+			pack_rom(0x50, argv[2], atoi(argv[3]), atoi(argv[4]), atoi(argv[5]), argv[6], argv[7]);
 		}
-		else if (strcmp(argv[1], "-rk29") == 0)
+		else if (strcmp(argv[1], "rk30") == 0)
 		{
-			chiptype = 0x50;
+			pack_rom(0x60, argv[2], atoi(argv[3]), atoi(argv[4]), atoi(argv[5]), argv[6], argv[7]);
+		}
+		else if (strcmp(argv[1], "rk31") == 0)
+		{
+			pack_rom(0x70, argv[2], atoi(argv[3]), atoi(argv[4]), atoi(argv[5]), argv[6], argv[7]);
 		}
 		else
 		{
 			usage(argv[0]);
 			return 0;
 		}
-		// loader, majorver, minorver, subver, oldimage, newimage
+		// chiptype, loader, majorver, minorver, subver, oldimage, newimage
 		pack_rom(argv[2], atoi(argv[3]), atoi(argv[4]), atoi(argv[5]), argv[6], argv[7]);
 	}
 	else

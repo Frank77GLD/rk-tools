@@ -1,5 +1,5 @@
-#ifndef RKROM_29XX_H
-#define RKROM_29XX_H
+#ifndef RKROM
+#define RKROM
 
 #pragma pack(1)
 
@@ -7,14 +7,14 @@
 #define ROM_VERSION(a,b,c) (((a) << 24) + ((b) << 16) + (c))
 
 #define RK_ROM_HEADER_CODE "RKFWf"
-struct _rkfw_header
+struct rkfw_header
 {
-	char	head_code[4];	// 固定为"RKFW"
+	char	head_code[4];	// Fixed header "RKFW"
 	unsigned short head_len;
 	unsigned int	version;	// ROM_VERSION()
 	unsigned int	code;
 
-	// 创建时间
+	// Creation date and time
 	unsigned short	year;
 	unsigned char	month;
 	unsigned char	day;
@@ -22,13 +22,13 @@ struct _rkfw_header
 	unsigned char	minute;
 	unsigned char	second;
 	
-	unsigned int	chip;	// 芯片类型
+	unsigned int	chip;	// Chip type
 	
-	unsigned int	loader_offset;	//loader 偏移
-	unsigned int	loader_length;	//loader 长度
+	unsigned int	loader_offset;	//loader offset
+	unsigned int	loader_length;	//loader length
 
-	unsigned int	image_offset;		//image偏移
-	unsigned int	image_length;		//image长度
+	unsigned int	image_offset;		//image offset
+	unsigned int	image_length;		//image offset
 
 	unsigned int unknown1;
 	unsigned int unknown2;
@@ -57,4 +57,4 @@ struct bootloader_header {
 
 #pragma pack()
 
-#endif // RKROM_29XX_H
+#endif // RKROM
