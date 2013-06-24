@@ -186,10 +186,10 @@ void usage(const char *appname) {
 	p = p ? p + 1 : appname;
 
 	printf("USAGE:\n"
-			"%i [chiptype] [loader] [major ver] [minor ver] [subver] [old image] [out image]\n\n"
+			"%s [chiptype] [loader] [major ver] [minor ver] [subver] [old image] [out image]\n\n"
 			"Example:\n"
-			"%i -rk30 Loader.bin 1 0 23 rawimage.img rkimage.img \tRK30 board\n"
-			"%i -rk31 Loader.bin 4 0 4 rawimage.img rkimage.img \tRK31 board\n"
+			"%s -rk30 Loader.bin 1 0 23 rawimage.img rkimage.img \tRK30 board\n"
+			"%s -rk31 Loader.bin 4 0 4 rawimage.img rkimage.img \tRK31 board\n"
 			"\n\n"
 			"Options:\n"
 			"[chiptype]:\n\t-rk29\n\t-rk30\n\t-rk31",*p,*p,*p);
