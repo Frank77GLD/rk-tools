@@ -97,7 +97,7 @@ int pack_rom(unsigned int chiptype, const char *loader_filename, int majver, int
 	}else if(chiptype == 0x60) {
 		rom_header.code = 0x01050000;
 	}else if(chiptype == 0x70) {
-		rom_header.code = 0x01050000;
+		rom_header.code = 0x01060000;
 	}
 	nowtime = time(NULL);
 	localtime_r(&nowtime, &local_time);

@@ -94,6 +94,7 @@ int unpack_rom(const char* filepath, const char* dstfile)
 		goto unpack_fail;
 	}
 
+	printf("rom header code: %x\n", rom_header.code);
 	printf("rom version: %x.%x.%x\n",
 		(rom_header.version >> 24) & 0xFF,
 		(rom_header.version >> 16) & 0xFF,
@@ -104,6 +105,7 @@ int unpack_rom(const char* filepath, const char* dstfile)
 		rom_header.hour, rom_header.minute, rom_header.second);
 
 	printf("chip: %x\n", rom_header.chip);
+	
 
 	printf("checking md5sum....");
 	fflush(stdout);
