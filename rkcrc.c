@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2010 FUKAUMI Naoki.
+ * Copyright (c) 2010, 2011 FUKAUMI Naoki.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,7 +38,7 @@ static void
 usage(void)
 {
 
-	fprintf(stderr, "usage: %s [-p] infile outfile\n", progname);
+	fprintf(stderr, "usage: %s [-k|-p] infile outfile\n", progname);
 	exit(EXIT_FAILURE);
 }
 
@@ -49,13 +49,16 @@ main(int argc, char *argv[])
 	ssize_t nr;
 	uint32_t crc;
 	uint8_t buf[512];
-	int ch, in, out, parm;
+	int ch, krnl, in, out, parm;
 
 	progname = argv[0];
 
-	parm = 0;
-	while ((ch = getopt(argc, argv, "p")) != -1) {
+	krnl = parm = 0;
+	while ((ch = getopt(argc, argv, "kp")) != -1) {
 		switch (ch) {
+		case 'k':
+			krnl = 1;
+			break;
 		case 'p':
 			parm = 1;
 			break;
@@ -66,10 +69,10 @@ main(int argc, char *argv[])
 	argc -= optind;
 	argv += optind;
 
-	if (argc != 2)
+	if (argc != 2 || (krnl && parm))
 		usage();
 
-	if ((in = open(argv[0], O_RDONLY, 0)) == -1)
+	if ((in = open(argv[0], O_RDONLY)) == -1)
 		err(EXIT_FAILURE, "%s", argv[0]);
 
 	if (fstat(in, &st) != 0)
@@ -78,11 +81,18 @@ main(int argc, char *argv[])
 	if ((out = open(argv[1], O_WRONLY | O_CREAT | O_TRUNC, 0644)) == -1)
 		err(EXIT_FAILURE, "%s", argv[1]);
 
-	if (parm) {
-		buf[0] = 'P';
-		buf[1] = 'A';
-		buf[2] = 'R';
-		buf[3] = 'M';
+	if (krnl || parm) {
+		if (krnl) {
+			buf[0] = 'K';
+			buf[1] = 'R';
+			buf[2] = 'N';
+			buf[3] = 'L';
+		} else {
+			buf[0] = 'P';
+			buf[1] = 'A';
+			buf[2] = 'R';
+			buf[3] = 'M';
+		}
 		buf[4] = (st.st_size >> 0) & 0xff;
 		buf[5] = (st.st_size >> 8) & 0xff;
 		buf[6] = (st.st_size >> 16) & 0xff;

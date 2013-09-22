@@ -19,7 +19,7 @@ int pack_krnl(FILE *fp_in, FILE *fp_out)
 	char buf[1024];
 	struct krnl_header header =
 	{
-		"KRNL",
+		MAGIC_CODE,
 		0
 	};
 
@@ -95,6 +95,10 @@ fail:
 	return -1;
 }
 
+void help(char **argv) {
+	fprintf(stderr, "usage: %s [-pack|-unpack] <input> <output>\n", argv[0]);
+}
+
 int main(int argc, char **argv)
 {
 	FILE *fp_in, *fp_out;
@@ -102,20 +106,11 @@ int main(int argc, char **argv)
 
 	if (argc != 4)
 	{
-		fprintf(stderr, "usage: %s [-a|-r] <input> <output>\n", argv[0]);
+		fprintf(stderr, "Not enough arguments!");
+		help(argv);
 		return 1;
 	}
-
-	if (strcmp(argv[1], "-a") == 0)
-	{
-		action = 1;
-	} else if (strcmp(argv[1], "-r") == 0)
-	{
-		action = 2;
-	} else {
-		fprintf(stderr, "usage: %s [-a|-r] <input> <output>\n", argv[0]);
-	}
-
+	
 	fp_in = fopen(argv[2], "rb");
 	if (!fp_in)
 	{
@@ -130,16 +125,18 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
-	switch (action)
+	if (strcmp(argv[1],"-pack") == 0) 
 	{
-	case 1:
 		pack_krnl(fp_in, fp_out);
-		break;
-	case 2:
+	}
+	else if (strcmp(argv[1],"-unpack") == 0) 
+	{
 		unpack_krnl(fp_in, fp_out);
-		break;
-	default:
-		break;
+	}
+	else
+	{
+		help(argv);
+		return 1;
 	}
 
 	return 0;
